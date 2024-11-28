@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mental Health Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.dashboard-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.visualization {
+    margin-bottom: 30px;
+}
+
+.student-card {
+    background-color: #f9f9f9;
+    border-left: 5px solid #3498db;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.student-card h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.student-card strong {
+    color: #e74c3c;
+}
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Student Mental Health Dashboard</h1>
+
+        <div id="emotion-trends" class="visualization"></div>
+
+        <div class="risk-assessment">
+            <h2>Risk Assessment Overview</h2>
+            {% for student in risk_data %}
+                <div class="student-card">
+                    <h3>Student: {{ student.anonymized_id }}</h3>
+                    <p>Risk Level: <strong>{{ student.risk_level }}</strong></p>
+
+                    <h4>Intervention Recommendations:</h4>
+                    <ul>
+                        {% for recommendation in interventions[student.anonymized_id] %}
+                            <li>{{ recommendation }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        var graphData = JSON.parse('{{ emotion_trends | safe }}');
+        Plotly.newPlot('emotion-trends', graphData.data, graphData.layout);
+    </script>
+</body>
+</html>
